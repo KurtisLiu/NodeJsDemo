@@ -1,0 +1,6 @@
+/fmp/node_modules
+/fmp/files
+
+*.sublime-project
+*.sublime-workspace
+*.swp
