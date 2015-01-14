@@ -35,7 +35,10 @@ $(document).ready(function() {
       },
       success: function(xhr) {
         $files.remove();
-        $('#fileList').append($('#uploadFiles').find('li'));
+        var $fileList = $('#fileList');
+        $('#uploadFiles').find('li').each(function(index, item) {
+          $fileList.append($('<li><a href="/files/download?filename=' + item.innerHTML + '">' + item.innerHTML + '<a></li>'));
+        });
         $('#uploadFiles').empty();
         $('#upload').hide();
         $('.upload-info').hide();
@@ -47,10 +50,6 @@ $(document).ready(function() {
         console.log('error');
       }
     })
-  });
-
-  $('#goFileList').on('click', function(e) {
-    window.location.href = '/files/list';
   });
 
   

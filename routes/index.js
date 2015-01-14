@@ -49,48 +49,36 @@ router.post('/files/upload', function(req, res, next) {
   });
 });
 
-router.get('/files/:id', function(req, res, next) {
-  var id = req.params.id;
-  FileModel.findById(id, function(err, doc) {
-    if(err) {
-      next(err);
-      return;
-    }
-    if(doc) {
-      var downloadPath = path.join(config.uploadDir, doc.uuid_name);
-      var realName = doc.real_name;
+router.get('/files/download', function(req, res, next) {
+  var filename = req.query.filename;    
+  var downloadPath = path.join(config.uploadDir, filename);
+  console.log(downloadPath);
 
-      // 方法1
-      // res.download(downloadPath, realName, function(err) {
-      //   if(err) {
-      //     next(err);
-      //   }
-      // });
+  // 方法1
+  // res.download(downloadPath, realName, function(err) {
+  //   if(err) {
+  //     next(err);
+  //   }
+  // });
 
       //方法2
-      fs.exists(downloadPath, function(exists) {
-        if(!exists) {
-          res.send({message: 'File not exist'});
-        } else {
-          res.setHeader('content-type', 'application/octet-stream');
-          res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(realName));
-          var stream = fs.createReadStream(downloadPath);
-
-          stream.on('data', function(chunk) {
-            res.write(chunk);
-          });
-          //或者直接用
-          // stream.pipe(res);
-
-
-          stream.on('end', function() {
-            res.end();
-          })
-        }
-      });
-      
-    } else {
+  fs.exists(downloadPath, function(exists) {
+    if(!exists) {
       res.send({message: 'File not exist'});
+    } else {
+      res.setHeader('content-type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(filename));
+      var stream = fs.createReadStream(downloadPath);
+
+      stream.on('data', function(chunk) {
+        res.write(chunk);
+      });
+      //或者直接用
+      // stream.pipe(res);
+
+      stream.on('end', function() {
+        res.end();
+      })
     }
   });
 });
