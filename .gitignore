@@ -1,5 +1,5 @@
-/fmp/node_modules
-/fmp/files/*
+/node_modules
+/files/*
 
 *.sublime-project
 *.sublime-workspace

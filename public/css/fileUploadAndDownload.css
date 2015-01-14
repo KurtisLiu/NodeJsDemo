@@ -1,0 +1,15 @@
+.upload-selection {
+  padding: 10px 0 20px 0;
+}
+
+.upload {
+  display: none;
+}
+
+.upload-files:empty {
+  display: none;
+}
+
+.upload-info{
+  display: none;
+}

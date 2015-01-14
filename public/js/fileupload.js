@@ -1,18 +1,25 @@
 $(document).ready(function() {
+  $('#selectFile').on('click', function(e) {
+    var $uploadInput = $('<input type="file" />').css('display', 'none');
+    $uploadInput.appendTo($('#fileUploadFrom'));
+    $uploadInput.trigger('click');
+  });
 
-  $('#showUpload').on('click', function(e) {
-    $('.upload-box').show(300);
+  $('#fileUploadFrom').on('change', 'input:file', function(e) {
+    $('#uploadFiles').append($('<li></li>').text(this.value.replace(/.*\\/g, '')));
+    $('#upload').show();
   });
 
   $('#upload').on('click', function(e) {
     var formData = new FormData();
-    formData.append('file', $('#file').prop('files')[0]);
-    formData.append('owner', $('#owner').val());
+    var $files = $('#fileUploadFrom').find('input:file');
+    for(var i = $files.length - 1; i >= 0; i--) {
+      formData.append('file' + i, $files[i].files[0]);
+    }
     $.ajax({
       url: "/files/upload",
-      cache: false, //设置为 false 将不会从浏览器缓存中加载请求信息
       contentType: false, //(默认: "application/x-www-form-urlencoded") 发送信息至服务器时内容编码类型
-      processData: false, //默认情况下，发送的数据将被转换为对象(技术上讲并非字符串) 以配合默认内容类型 "application/x-www-form-urlencoded"。如果要发送 DOM 树信息或其它不希望转换的信息，请设置为 false。
+      processData:false,  // 必须false才会避开jQuery对 formdata 的默认处理 
       data: formData,
       type: 'post',
       xhr: function() {
@@ -27,6 +34,13 @@ $(document).ready(function() {
         $('progress').val(0);
       },
       success: function(xhr) {
+        $files.remove();
+        $('#fileList').append($('#uploadFiles').find('li'));
+        $('#uploadFiles').empty();
+        $('#upload').hide();
+        $('.upload-info').hide();
+        $('progress').val(0);
+
         console.log(xhr);
       },
       error: function(err) {

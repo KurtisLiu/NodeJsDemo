@@ -1,21 +1,24 @@
-var config = require('../config');
 var express = require('express');
 var router = express.Router();
 var formidable = require('formidable');
 var path = require('path');
 var fs = require('fs');
-var FileModel = require('../models').FileModel;
+var config = require('../config');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
+  fs.readdir(config.uploadDir, function(err, files) {
+    res.render('fileUploadAndDownload', {files: files});
+  });
 });
 
 router.post('/files/upload', function(req, res, next) {
+  console.log(config.uploadDir);
   var form = formidable.IncomingForm();
   form.encoding = 'utf-8';
   form.uploadDir = config.uploadDir;
   form.keepExtensions = true;
+  // form.multiples = true;
   // form.maxFieldsSize = 2 * 1024 * 1024; // 单位为byte
 
   form.on('progress', function(bytesReceived, bytesExpected) {
@@ -34,37 +37,16 @@ router.post('/files/upload', function(req, res, next) {
   form.on('error', function(err) {
     console.error('upload failed', err.message);
     next(err);
-  })
-
-  form.parse(req, function(err, fields, file) {
-    var fileModel = new FileModel({
-      real_name: file.file.name,
-      uuid_name: path.basename(file.file.path),
-      owner: fields.owner
-    });
-    fileModel.save();
   });
-});
 
-router.get('/files/list', function(req, res, next) {
-  FileModel.find().sort('owner')
-    .exec(function(err, docs) {
-      if(err) {
-        next(err);
-        return;
-      };
-      var fileList = null;
-      if(docs.length) {
-        fileList = {};
-        for(var i = 0; i < docs.length; i++) {
-          var owner = docs[i].owner;
-          var ownerFiles = fileList[owner] || [];
-          ownerFiles.push(docs[i]);
-          fileList[owner] = ownerFiles;
-        }
-      }
-      res.render('fileList', {fileList: fileList});
-    });
+  form.parse(req, function(err, fields, files) {
+    for(var key in files) {
+      var file = files[key];
+      fs.rename(file.path, config.uploadDir + '/' + file.name, function(err) {
+
+      });
+    }
+  });
 });
 
 router.get('/files/:id', function(req, res, next) {

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>文件上传与下载</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+  </head>
+  <body>    
+    <div class="container">
+      <div class="output" id="outputView">
+        <canvas id="canvas" width=800 height=400>
+          您的浏览器不支持Canvas,请使用高版本浏览器或使用Chrome或Firefox
+        </canvas>
+      </div>
+      <div class="export-selection">
+        <button id="export" class="export-btn">另存为</button>
+        <div class="upload-info">
+          <progress value="0" max="100"></progress>
+          <span class="progress-value">0</span>
+        </div>
+      </div>
+    </div>
+    <h1>文件下载列表</h1>
+    <ul id="fileList">
+      <% if(!files || files.length <= 0) { %>
+        <li>暂无文件</li>
+      <% } else { %>
+        <% for(var i = 0; i < files.length; i++) { %>
+          <li><%= files[i] %></li>
+        <% } %>
+      <% } %>
+    </ul>
+  </body>
+
+  <script type="text/javascript" src="/libs/jquery.js"></script>
+  <script type="text/javascript" src="/js/filedownload.js"></script>
+  <script type="text/javascript" src="/js/fileupload.js"></script>
+</html>
