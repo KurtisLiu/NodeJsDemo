@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>文件上传与下载</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/css/canvasExport.css">
+  </head>
+  <body>    
+    <div class="container">
+      <center class="output-view">
+        <div class="actions">
+          <button class="draw stroke-circle">画空心圆</button>
+          <button class="draw fill-circle">画实心圆</button>
+          <button class="draw stroke-rect">画空心矩形</button>
+          <button class="draw fill-rect">画实心矩形</button>
+          <button class="draw active-btn line">画线</button>
+          <button id="export" class="export">导出</button>
+        </div>
+        <div class="colors">
+          <label>颜色</label>
+          <ul class="color-list" id="colorList">
+            <li class="color black active-color" style="background: #000"></li>
+            <li class="color red" style="background: #F00"></li>
+            <li class="color blue" style="background: #00F"></li>
+            <li class="color yellow" style="background: #FF0"></li>
+            <li class="color green" style="background: #0F0"></li>
+            <li class="color gray" style="background: #808080"></li>
+          </ul>
+        </div>
+        <canvas id="canvas" width=800 height=400>
+          您的浏览器不支持Canvas,请使用高版本浏览器或使用Chrome或Firefox
+        </canvas>
+        <div id="position"></div>
+      </center>
+  </body>
+
+  <script type="text/javascript" src="/libs/jquery.js"></script>
+  <script type="text/javascript" src="/js/canvasExport.js"></script>
+</html>

@@ -1,0 +1,35 @@
+.output-view {
+  padding-top: 10px;
+}
+.output-view > canvas {
+  outline: 1px solid rgb(240, 239, 239);
+  cursor: crosshair;
+}
+
+.actions, .colors {
+  margin: 10px 0;
+  text-align: left;
+}
+.export{
+  margin-left: 100px;
+}
+
+.colors > label {
+  vertical-align: top;
+}
+.color-list{
+  display: inline-block;
+}
+.colors .color {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.color.active-color {
+  border: 2px solid #000;
+}
+
+.active-btn {
+  border-color: #F20B0B;
+}
