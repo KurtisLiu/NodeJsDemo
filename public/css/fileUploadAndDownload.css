@@ -13,3 +13,13 @@
 .upload-info{
   display: none;
 }
+
+.file-item-cancel {
+  margin-left: 50px;
+  color: red;
+  cursor: pointer;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+}

@@ -7,9 +7,27 @@ var config = require('../config');
 
 /* GET home page. */
 router.get('/', function(req, res) {
+  res.render('index');
+});
+
+router.get('/filemanager', function(req, res) {
   fs.readdir(config.uploadDir, function(err, files) {
     res.render('fileUploadAndDownload', {files: files});
   });
+});
+
+router.get('/canvasexport', function(req, res) {
+   res.render('canvasexport');
+});
+
+router.post('/files/export', function(req, res) {
+  var imageData = req.body.imageData;
+  res.setHeader('content-type', 'application/octet-stream');
+  res.setHeader('Content-Disposition', 'attachment; filename=canvas.png');
+
+  var buffer = new Buffer(imageData, 'base64');
+  res.write(buffer);
+  res.end();
 });
 
 router.post('/files/upload', function(req, res, next) {
@@ -18,7 +36,7 @@ router.post('/files/upload', function(req, res, next) {
   form.encoding = 'utf-8';
   form.uploadDir = config.uploadDir;
   form.keepExtensions = true;
-  // form.multiples = true;
+  form.multiples = true;
   // form.maxFieldsSize = 2 * 1024 * 1024; // 单位为byte
 
   form.on('progress', function(bytesReceived, bytesExpected) {
@@ -43,7 +61,7 @@ router.post('/files/upload', function(req, res, next) {
     for(var key in files) {
       var file = files[key];
       fs.rename(file.path, config.uploadDir + '/' + file.name, function(err) {
-
+        console.log('rename %s failed', file.name);
       });
     }
   });

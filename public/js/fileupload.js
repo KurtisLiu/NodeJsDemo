@@ -1,13 +1,35 @@
 $(document).ready(function() {
   $('#selectFile').on('click', function(e) {
-    var $uploadInput = $('<input type="file" />').css('display', 'none');
-    $uploadInput.appendTo($('#fileUploadFrom'));
+    var $uploadInput = $('<input type="file" />');
+    $uploadInput
+        .css('display', 'none')
+        .attr('id', (new Date()).getTime())
+        .appendTo($('#fileUploadFrom'));
     $uploadInput.trigger('click');
   });
 
   $('#fileUploadFrom').on('change', 'input:file', function(e) {
-    $('#uploadFiles').append($('<li></li>').text(this.value.replace(/.*\\/g, '')));
+    var $fileItem = $('<li></li>').addClass('file-item').attr('data-proxy', this.id);
+    $('<span></span>')
+        .text(this.value.replace(/.*\\/g, ''))
+        .addClass('file-item-name')
+        .appendTo($fileItem);
+    $('<span></span>')
+        .text('X')
+        .addClass('file-item-cancel')
+        .appendTo($fileItem);
+    $('#uploadFiles').append($fileItem);
     $('#upload').show();
+  });
+
+  $('#uploadFiles').on('click', '.file-item-cancel', function(e) {
+    var $fileItem = $(this).closest('.file-item');
+    var id = $fileItem.attr('data-proxy');
+    $fileItem.remove();
+    $('#' + id).remove();
+    if($('#uploadFiles').find('li').length <= 0) {
+      $('#upload').hide();
+    }
   });
 
   $('#upload').on('click', function(e) {
@@ -25,7 +47,8 @@ $(document).ready(function() {
       xhr: function() {
         var myXhr = $.ajaxSettings.xhr();
         if(myXhr.upload){ // Check if upload property exists
-        myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // For handling the progress of the upload
+          // For handling the progress of the upload
+          myXhr.upload.addEventListener('progress', progressHandlingFunction, false); 
         }
         return myXhr;
       },
@@ -36,8 +59,10 @@ $(document).ready(function() {
       success: function(xhr) {
         $files.remove();
         var $fileList = $('#fileList');
+        $fileList.find('.no-files').remove();
         $('#uploadFiles').find('li').each(function(index, item) {
-          $fileList.append($('<li><a href="/files/download?filename=' + item.innerHTML + '">' + item.innerHTML + '<a></li>'));
+          var filename = $(item).find('.file-item-name').text();
+          $fileList.append($('<li><a href="/files/download?filename=' + filename + '">' + filename + '<a></li>'));
         });
         $('#uploadFiles').empty();
         $('#upload').hide();
@@ -51,8 +76,6 @@ $(document).ready(function() {
       }
     })
   });
-
-  
 
   var $progressValue = $('.progress-value');
   var $progressBar = $('progress');
